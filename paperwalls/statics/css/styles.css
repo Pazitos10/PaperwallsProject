@@ -1,0 +1,244 @@
+/*CSS navbar*/
+
+.navbar-inverse {
+  background-color: #ff9900;
+  /*border-color: #E2BE8F;*/
+  border-color: #ff9900;
+  position:absolute;
+}
+
+#logo{
+  font-weight: 900;
+  color: white;
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+}
+
+#logo:hover {
+  text-shadow: 2px 2px black;
+}
+
+#nav-options li a{
+  color:white;
+  font-weight: 900;
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+}
+
+#nav-options li a:hover{
+  text-shadow: 1px 1px black;
+}
+
+
+.navbar-inverse .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .open > a:hover, .navbar-inverse .navbar-nav > .open > a:focus
+{
+  color: white;
+  background-color: #ff9900
+}
+
+#drop-opt li a:hover {
+  background-color:  #ff9900;
+  color: white;
+  text-shadow: none;
+}
+
+#drop-opt li a {
+  color: black;
+  -moz-transition: none;
+  -webkit-transition: none;
+  -o-transition: none;
+  transition: none;
+}
+
+
+
+
+/* css para buscador en nav */
+#custom-search-input {
+        margin:0;
+        margin-top: 10px;
+        margin-left: 10px;
+        padding: 0;
+        width: 300px;
+    }
+ 
+#custom-search-input .search-query {
+    padding-right: 3px;
+    padding-right: 4px \9;
+    padding-left: 3px;
+    padding-left: 4px \9;
+    /* IE7-8 doesn't have border-radius, so don't indent the padding */
+
+    margin-bottom: 0;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}
+
+#custom-search-input button {
+    border: 0;
+    background: none;
+    /** belows styles are working good */
+    padding: 2px 5px;
+    margin-top: 2px;
+    position: relative;
+    left: -28px;
+    /* IE7-8 doesn't have border-radius, so don't indent the padding */
+    margin-bottom: 0;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}
+
+.search-query:focus + button {
+    z-index: 3;   
+}
+
+/* fin css para buscador en nav */
+
+
+
+/* Sticky footer styles
+-------------------------------------------------- */
+
+html, body {
+  height: 100%;
+}
+
+#wrap {
+  min-height: 100%;
+}
+
+#main {
+  overflow:auto;
+  padding-bottom:150px; /* this needs to be bigger than footer height*/
+}
+
+.footer {
+  position: relative;
+  margin-top: -150px; /* negative value of footer height */
+  height: 150px;
+  clear:both;
+  padding-top:20px;
+} 
+
+
+#img-style{
+  margin:5px 10px 10px 0px;
+}
+
+
+#paginador{
+  text-align:center;
+  display: block;
+}
+
+
+.container .jumbotron {
+  padding-right: 30px;
+  padding-left: 30px;
+}
+
+.jumbotron{
+  height: 320px;
+  margin-bottom: 20px;
+  background-color:#FFC23F;
+  color:white;
+}
+
+.contenido-jumbo {
+  color:white;
+  margin-top: 20px;
+}
+
+
+.contenido{
+   color:black;
+}
+
+.main{
+  margin-left: 15px;
+}
+
+.sign-up-form{
+  padding-bottom: 10px
+}
+
+.forms-alta{
+  margin-left: 250px;
+  margin-right: 250px;
+  margin-top: 80px;
+}
+
+#submit-id-submit-imagen{
+  margin-top: 214px;
+  float:right;
+}
+
+
+#div_id_nombre,#div_id_titulo{
+  width: 90%;
+  float: left;
+}
+
+#imagen-preview-id{
+  width: 395px;
+  height: 250px;
+  margin-left: 6px;
+}
+
+#modal-preview{
+  width: 680px;
+}
+
+.tokenfield{
+  width: 395px;
+}
+
+#submit-id-submit-album,#submit-id-submit-categoria{
+  float:right;
+}
+
+.badge-custom-color{
+  /*background-color:#b94a48;*/
+  background-color: #428bca;
+}
+
+
+/*Css ver imagen*/
+
+@import url("http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css");
+
+.panel-image img.panel-image-preview {
+    width: 100%;
+  border-radius: 4px 4px 0px 0px;
+}
+
+.panel-heading ~ .panel-image img.panel-image-preview {
+  border-radius: 0px;
+}
+
+.panel-image ~ .panel-body, .panel-image.hide-panel-body ~ .panel-body {
+  overflow: hidden;
+}
+.panel-image ~ .panel-footer a {
+  padding: 0px 10px;
+  font-size: 1.3em;
+  color: rgb(100, 100, 100);
+}
+
+.panel-image.hide-panel-body ~ .panel-body {
+  height: 0px;
+  padding: 0px;
+}
+
+#panel-img-actions{
+  font-size: 1.8em;
+}
+
+#panel-img-actions a {
+  margin-right: 10px;
+}
+
+
+/*Css ver imagen*/

@@ -1,0 +1,17 @@
+{% extends 'base.html'%}
+
+    {% block titulo %}    
+    <title>Paperwalls Project</title>
+    {% endblock titulo %}
+
+
+
+    {% block welcome %}    
+    {% endblock %}
+
+    {% block content %}
+    <div style="margin-top: 80px">
+        <h1> Bienvenido @{{usuario.username|upper}} </h1>
+        <h4> Acabas de iniciar sesión en Paperwalls, que te diviertas! </h4>
+    </div>
+    {% endblock %}

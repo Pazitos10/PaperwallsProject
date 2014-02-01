@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+    
+{% block welcome %}
+    {% if not user.is_authenticated %}
+        {{block.super}}
+    {% endif %}
+{% endblock welcome %}
+
+
+{% block content %}
+    <div class="main">
+        <!-- Albums  -->
+        <ul id="album-list">
+            <h3>Las imágenes más recientes</h3>
+            {% for album in albums.object_list %}
+                {% if album.imagen_set.count > 0 %}
+                    {% for img in album.imagen_set.all %}
+                    <a href="{% url "view_image" img.id %}"><img id="img-style" class="img-thumbnail" border="0" alt=""
+                            src="{{img.imagen.url_128x128 }}" /></a>
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+
+{% endblock %}

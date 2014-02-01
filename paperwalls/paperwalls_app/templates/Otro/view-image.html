@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+{% load crispy_forms_tags %}
+
+{% block titulo %}    
+    <title>Paperwalls > Galeria </title>
+{% endblock titulo %}
+
+
+
+{% block welcome %}
+{% endblock %}
+
+{% block content %}
+
+        <div class="panel panel-default"  style="margin-top:80px;border-color: #428bca;">
+          <div class="panel-heading" style="background-color:#428bca;color:white;text-align:center">
+                <h4 >Información de la imagen seleccionada</h4>
+          </div>  
+          <div class="panel-body">
+            <div class="col-lg-6" style="width:730px">
+              <div class="panel panel-default">
+                  
+                  <div class="panel-body">
+                      <img src="{{imagen.url}}" id="imagen" width="668" height="490" >
+                  </div>
+                  <div class="panel-footer text-center" id="panel-img-actions">
+                      <a href="{% url "file_download" imagen.name %}" id="download" ><span class="glyphicon glyphicon-download"></span></a>
+                      <a href="#facebook"><span class="fa fa-facebook"></span></a>
+                      <a href="#twitter"><span class="fa fa-twitter"></span></a>
+                      <a href="#share"><span class="glyphicon glyphicon-share-alt"></span></a>
+                  </div>
+              </div>
+            </div>
+
+            <ul class="list-group pull-right col-lg-4" >
+              <li class="list-group-item">
+                 <span class="badge badge-custom-color"> {{imagen.width}}x{{imagen.height}} </span>
+                 Tamaño original 
+              </li>
+              <li class="list-group-item">
+                 <span class="badge badge-custom-color"> {{user}} </span>
+                 Uploader 
+              </li>
+              <li class="list-group-item">
+                 <span class="badge badge-custom-color"> {{obj.categoria}} </span>
+                 Categoria
+              </li>
+              <li class="list-group-item">
+                 <span class="badge badge-custom-color"> {{obj.tags}} </span>
+                 Tags 
+              </li>
+              <li class="list-group-item">
+                 <span class="badge badge-custom-color"> {{obj.creacion}} </span>
+                 Fecha
+              </li>
+
+            </ul>
+          </div>
+        </div>
+        
+
+{% endblock %}
+
+{% block scripts %}
+    {{block.super}}
+
+{% endblock %}
+

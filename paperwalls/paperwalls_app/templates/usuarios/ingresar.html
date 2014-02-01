@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block titulo %}    
+    <title>Paperwalls > Iniciar </title>
+{% endblock titulo %}
+
+{% block welcome %} 
+{% endblock welcome %}
+
+{% block content %}
+    <div class="forms-alta">
+        <div class="panel panel-primary"  style="margin-top:80px">
+            <div class="panel-heading" style="text-align:center">
+                    <h4><strong>Iniciar Sesión</strong></h4>
+            </div>  
+            <div class="panel-body">
+                <form action="" method="post" id="formulario-registro" >
+                    <table>{%crispy formulario%}</table>
+                    <input class="btn btn-success" type="submit" value="Ingresar" style="width:100%">
+                </form>
+            </div>
+        </div>
+    </div>    
+            
+{% endblock content %}

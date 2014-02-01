@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block titulo %}    
+    <title>Paperwalls > Albumes > Crear </title>
+{% endblock titulo %}
+
+{% block welcome %}
+{% endblock %}
+
+{% block content %}
+	<div class="forms-alta"> 
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4><strong>Nuevo Álbum</strong></h4>
+            </div>  
+            <div class="panel-body">
+    			{% crispy album %} 
+            </div>
+        </div>
+    </div>
+{% endblock %}
