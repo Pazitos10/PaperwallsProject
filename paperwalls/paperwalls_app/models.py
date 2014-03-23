@@ -8,23 +8,19 @@ from PIL import Image as PImage
 from paperwalls.settings import MEDIA_ROOT
 from thumbs import ImageWithThumbsField #crea automaticamente thumbnails para cada img subida
 
+from taggit.managers import TaggableManager
 
-
-
-class Etiqueta(models.Model):
-    etiqueta = models.CharField(max_length=50)
-    def __unicode__(self):
-        return self.etiqueta
 
 class Imagen(models.Model):
     imagen = ImageWithThumbsField(upload_to="images/", sizes=((40,40),(128,128)))
-    etiquetas = models.ManyToManyField(Etiqueta)
-    album = models.ForeignKey("Album")
+    etiquetas = TaggableManager()
+    album = models.ForeignKey("Album",null=False,blank=False)
     creacion = models.DateTimeField(auto_now_add=True)
     width = models.IntegerField(blank=True, null=True)
     height = models.IntegerField(blank=True, null=True)
-    user = models.ForeignKey(User, null=True, blank=True)
-    categoria = models.ForeignKey("Categoria")
+    user = models.ForeignKey(User)
+    categoria = models.ForeignKey("Categoria",null=False,blank=False)
+    publica = models.BooleanField(default=True)
 
     def save(self, *args, **kwargs):
         """Save image dimensions."""
@@ -32,6 +28,14 @@ class Imagen(models.Model):
         im = PImage.open(os.path.join(MEDIA_ROOT, self.imagen.name))
         self.width, self.height = im.size
         super(Imagen, self).save(*args, ** kwargs)
+    
+    def delete(self, *args, **kwargs):
+        for tag in self.etiquetas.all():
+            tag.delete()
+        self.imagen.delete() #se supone que borra la imagen fisica y sus thumbnails pero tira error
+        super(Imagen, self).delete(*args, **kwargs)
+    
+
 
     def __unicode__(self):
         return self.imagen.name
@@ -47,12 +51,14 @@ class Imagen(models.Model):
 class Categoria(models.Model):
     nombre = models.CharField(max_length=60, unique=True)
 
+
     def __unicode__(self):
         return self.nombre
 
 class Album(models.Model):
     titulo = models.CharField(max_length=60, unique=True)
-    
+    creador = models.ForeignKey(User)
+
     def imagenes(self):
         lst = [x.imagen.name for x in self.imagen_set.all()]
         lst = ["<a href='/media/%s'>%s</a>" % (x, x.split('/')[-1]) for x in lst]
@@ -62,5 +68,10 @@ class Album(models.Model):
     def __unicode__(self):
         return self.titulo
 
+    def delete(self, *args, **kwargs):
+        for img in self.imagen_set.all():
+            img.delete()
+        super(Album, self).delete(*args, **kwargs)
+    
 
         

@@ -2,12 +2,13 @@ from paperwalls_app.models import *
 from django.contrib import admin
 from django.utils.safestring import mark_safe
 
-class AlbumAdmin(admin.ModelAdmin):
-    search_fields = ["titulo"]
-    list_display = ["titulo","imagenes"]
 
-class EtiquetaAdmin(admin.ModelAdmin):
-    list_display = ["etiqueta"]
+
+
+class AlbumAdmin(admin.ModelAdmin):
+    search_fields = ["titulo","creador"]
+    list_display = ["titulo","creador","imagenes"]
+
 
 class CategoriaAdmin(admin.ModelAdmin):
     search_fields = ["nombre"]
@@ -27,10 +28,9 @@ class ImagenAdmin(admin.ModelAdmin):
     thumb_img.allow_tags = True
 
     def save_model(self, request, obj, form, change):
-        obj.user = request.user
+        print obj.user
         obj.save()
 
 admin.site.register(Album, AlbumAdmin)
-admin.site.register(Etiqueta, EtiquetaAdmin)
 admin.site.register(Imagen, ImagenAdmin)
 admin.site.register(Categoria, CategoriaAdmin)

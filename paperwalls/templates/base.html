@@ -1,6 +1,5 @@
 {% load staticfiles %}
 
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -10,10 +9,12 @@
     {% endblock titulo %}
 
     <!-- Bootstrap core CSS -->
+    <link href="{% static 'css/jquery-ui.css' %}" type="text/css" rel="stylesheet" >
     <link href="{% static  'css/bootstrap.css' %}" rel="stylesheet">
     <link href="{% static  'css/bootstrap-tokenfield.css' %}" rel="stylesheet">
     <link href="{% static  'css/styles.css' %}" rel="stylesheet">
     <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css">
+    <link href="{% static  'selectable/css/dj.selectable.css' %}" rel="stylesheet">
 
   </head>
 
@@ -76,14 +77,14 @@
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown"> Categorias <b class="caret"></b></a>
                             <ul class="dropdown-menu" id="drop-opt">
                                 <li><a href="{% url "alta_categoria" %}"> Crear Categoria </a></li>
-                                <li><a href="{% url "modificar_imagen" %}"> Modificar Categoria </a></li>
-                                <li><a href="{% url "baja_imagen" %}"> Eliminar Categoria </a></li>
+                                <li><a href="{% url "modificar_categoria" %}"> Modificar Categoria </a></li>
+                                <li><a href="{% url "baja_categoria" %}"> Eliminar Categoria </a></li>
                             </ul>
                         </li> <!--FIN Drop opciones Categorias  -->
                     {% endif %}
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown"> {{user}} <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
+                        <ul class="dropdown-menu" id="drop-opt">
                             <li><a href="{% url "salir" %}">Salir </a></li>
                         </ul>
                     </li>
@@ -125,12 +126,13 @@
     <!-- Bootstrap core JavaScript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-
-  
+    <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+    <script src="{% static  'js/jquery.min.js'%}"></script>
+    <script src="{% static  'js/jquery-ui.js'%}"></script>
     <script src="{% static  'js/bootstrap.min.js' %}"></script>
     <script src="{% static  'js/bootstrap-tokenfield.js' %}"></script>
     <script src="{% static  'js/jquery.fileDownload.js' %}"></script>
+    <script src="{% static  'selectable/js/jquery.dj.selectable.js' %}"></script>
 
     {% endblock%}
   </body>

@@ -2,6 +2,7 @@ from django.http import HttpResponseRedirect,HttpResponse
 from django.shortcuts import get_object_or_404, render_to_response
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
 from django.template import RequestContext
+from datetime import datetime
 
 
 #Manejo de usuarios
@@ -15,6 +16,8 @@ from django.core.servers.basehttp import FileWrapper
 import mimetypes
 import os
 #Descarga de imagenes
+
+
 
 from paperwalls.settings import MEDIA_URL,MEDIA_ROOT
 from paperwalls_app.models import *
@@ -52,18 +55,18 @@ def alta_album(request):
     else:
         album = AlbumForm(request.POST)
         if album.is_valid():
-            album.save()
+            obj = album.save(commit=False)
+            obj.creador = request.user
+            obj.save()
             return HttpResponseRedirect('/')
     return render_to_response('Albumes/alta_album.html', 
         {'album': album}, 
         context_instance=RequestContext(request))
 
-#Terminar
+
 def modificar_album(request):
-    pass
-    '''
     buscador = BuscadorAlbumForm()
-    album = ''
+    formulario = ''
     if request.method=='POST':
         album = int(request.REQUEST["album_1"])
         album = get_object_or_404(Album, pk = album)
@@ -78,11 +81,33 @@ def modificar_album(request):
             album = get_object_or_404(Album, pk = album)
             buscador = BuscadorAlbumForm(request.REQUEST)
             formulario = AlbumForm(instance = album)
-    return render_to_response('Albumes/modificar_album.html',{'album': album,'buscar':buscador},context_instance=RequestContext(request)) 
-    '''        
+
+    return render_to_response('Albumes/modificar_album.html',{'album': formulario,'buscar':buscador},context_instance=RequestContext(request)) 
     
 def baja_album(request):
-    pass
+    if request.method=='POST':
+        album = str(request.REQUEST["album_1"])
+        album = get_object_or_404(Album, pk = album)
+        formulario = AlbumForm(request.POST, instance=album)
+        if formulario.is_valid():
+            nombre_album = album.titulo
+            if request.REQUEST["input-confirma-borrar"]== 'true':
+                album.delete()
+                print 'El album %s ha sido borrado junto con sus imagenes!'%(nombre_album) # a futuro quitar los prints y utilizar mensajes en los templates para mejor feedback
+            return HttpResponseRedirect('/') 
+    else:
+        if "album_1" in request.REQUEST:
+            album = str(request.REQUEST["album_1"])
+            album = get_object_or_404(Album, pk = album)
+            buscador = BuscadorAlbumForm(request.REQUEST)
+            formulario = AlbumForm(instance = album)
+        else:
+            buscador = BuscadorAlbumForm()
+            formulario = ""
+    return render_to_response('Albumes/baja_album.html', {'album': formulario, 'buscar':buscador}, context_instance=RequestContext(request))
+
+
+
 
 
 def alta_imagen(request):
@@ -91,27 +116,63 @@ def alta_imagen(request):
     else:
         imagen = ImagenForm(request.POST, request.FILES)
         if imagen.is_valid():
-            imagen.save()
-            etiquetas = imagen.cleaned_data['Tags']      #obtenemos etiquetas desde el campo customizado
-            tags = etiquetas.split(', ')            #separamos las mismas y las almacenamos en una lista
-            for tag in tags:                        #por cada palabra creamos una etiqueta y la guardamos en la base
-                e = Etiqueta()
-                e.etiqueta = tag
-                e.save()
-                imagen.instance.etiquetas.add(e) 
+            obj = imagen.save(commit=False)
+            obj.user = request.user
+            obj.save()
+            imagen.save_m2m()
             return HttpResponseRedirect('/')
     return render_to_response('Imagen/alta_imagen.html', 
         {'imagen': imagen},context_instance=RequestContext(request))                    
 
 def modificar_imagen(request):
-    pass
+    buscador = BuscadorImagenForm()
+    formulario = ''
+    preview = ''
+    if request.method=='POST':
+        imagen = int(request.REQUEST["imagen_1"])
+        imagen = get_object_or_404(Imagen, pk = imagen)
+        formulario = ImagenForm(request.POST, instance=imagen)
+        print formulario.is_valid()
+        if formulario.is_valid():
+            formulario.save()
+            print 'imagen data modified successfully!'
+            return HttpResponseRedirect('/')
+    else:
+        if "imagen_1" in request.REQUEST:
+            imagen = int(request.REQUEST["imagen_1"])
+            imagen = get_object_or_404(Imagen, pk = imagen)
+            buscador = BuscadorImagenForm(request.REQUEST)
+            formulario = ImagenForm(instance = imagen)
+            preview = imagen.imagen.url
+    return render_to_response('Imagen/modificar_imagen.html',{'imagen': formulario,'buscar':buscador,'preview':preview},context_instance=RequestContext(request)) 
 
 def baja_imagen(request):
-    pass
+    preview = ''
+    if request.method=='POST':
+        imagen = str(request.REQUEST["imagen_1"])
+        imagen = get_object_or_404(Imagen, pk = imagen)
+        formulario = ImagenForm(request.POST, instance=imagen)
+        if formulario.is_valid():
+            imagen.delete()    
+            return HttpResponseRedirect('/') 
+    else:
+        if "imagen_1" in request.REQUEST:
+            imagen = str(request.REQUEST["imagen_1"])
+            imagen = get_object_or_404(Imagen, pk = imagen)
+            buscador = BuscadorImagenForm(request.REQUEST)
+            formulario = ImagenForm(instance = imagen)
+            preview = imagen.imagen.url
+        else:
+            buscador = BuscadorImagenForm()
+            formulario = ""
+    return render_to_response('Imagen/baja_imagen.html', {'imagen': formulario, 'buscar':buscador,'preview':preview}, context_instance=RequestContext(request))
 
 
 
 
+
+
+#ABM Categorias - Funcionando --> TODO:  integrar mensajes para mejor feedback
 def alta_categoria(request):
     if request.method == "GET":
         categoria = CategoriaForm() 
@@ -120,17 +181,60 @@ def alta_categoria(request):
         if categoria.is_valid():
             categoria.save()
             return HttpResponseRedirect('/')
-        else:
-            print categoria.errors
     return render_to_response('Categorias/alta_categoria.html', 
         {'categoria': categoria}, 
         context_instance=RequestContext(request))
 
 def modificar_categoria(request):
-    pass
+    buscador = BuscadorCategoriaForm()
+    formulario = ''
+    if request.method=='POST':
+        categoria = int(request.REQUEST["categoria_1"])
+        categoria = get_object_or_404(Categoria, pk = categoria)
+        formulario = CategoriaForm(request.POST, instance=categoria)
+        print formulario.is_valid()
+        if formulario.is_valid():
+            formulario.save()
+           
+            return HttpResponseRedirect('/')
+    else:
+        if "categoria_1" in request.REQUEST:
+            categoria = int(request.REQUEST["categoria_1"])
+            categoria = get_object_or_404(Categoria, pk = categoria)
+            buscador = BuscadorCategoriaForm(request.REQUEST)
+            formulario = CategoriaForm(instance = categoria)
+            
+    return render_to_response('Categorias/modificar_categoria.html',{'categoria': formulario,'buscar':buscador},context_instance=RequestContext(request)) 
 
 def baja_categoria(request):
-    pass
+    if request.method=='POST':
+        categoria = str(request.REQUEST["categoria_1"])
+        categoria = get_object_or_404(Categoria, pk = categoria)
+        formulario = CategoriaForm(request.POST, instance=categoria)
+        if formulario.is_valid():
+            nombre_categoria = categoria.nombre
+            if categoria.imagen_set.count() == 0 :
+                categoria.delete()
+                print 'La categoria %s ha sido borrada!'%(nombre_categoria) # a futuro quitar los prints y utilizar mensajes en los templates para mejor feedback
+            else:
+                print 'La categoria %s no puede ser eliminada debido a que hay imagenes relacionadas'%(nombre_categoria)
+            return HttpResponseRedirect('/') 
+    else:
+        if "categoria_1" in request.REQUEST:
+            categoria = str(request.REQUEST["categoria_1"])
+            categoria = get_object_or_404(Categoria, pk = categoria)
+            buscador = BuscadorCategoriaForm(request.REQUEST)
+            formulario = CategoriaForm(instance = categoria)
+        else:
+            buscador = BuscadorCategoriaForm()
+            formulario = ""
+    return render_to_response('Categorias/baja_categoria.html', {'categoria': formulario, 'buscar':buscador}, context_instance=RequestContext(request))
+
+
+
+
+
+
 
 def view_image(request, id_imagen):
     i = get_object_or_404(Imagen, pk = id_imagen)
@@ -148,9 +252,9 @@ def nuevo_usuario(request):
         formulario = UserCreationForm(request.POST)
         if formulario.is_valid():
             formulario.save()
-            return HttpResponseRedirect('usuarios/ingresar')
+            return HttpResponseRedirect('ingresar')
     else:
-        formulario = UserCreationForm()
+        formulario = UserCreationForm(instance = get_object_or_404(User, username='jjose') )
     return render_to_response('usuarios/nuevousuario.html',{'formulario':formulario},context_instance=RequestContext(request))
 
 def ingresar(request):

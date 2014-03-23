@@ -21,7 +21,7 @@
                 </div>
                 <div class="preview-imagen control-label" id="img-prev">
                     <label class="col-lg-2">Preview </label>
-                    <img class="controls col-lg-8 img-thumbnail" id="imagen-preview-id" src="{% static  'img/no-image.jpg' %}">
+                    <img class="controls col-lg-8 img-thumbnail" id="imagen-preview-id" src= "{% static  'img/no-image.jpg' %}" >
                 </div>
             </div>
         </div>
@@ -57,36 +57,9 @@
 
     // Script para crear los tags como badges cuando se da de alta una img
 
-    $('#id_tag').tokenfield('allowDuplicates=False');
+    $('#id_etiquetas').tokenfield('allowDuplicates=False');
 
-
-
-    // El envio del formulario hace de Trigger para esta funcion, que obtiene los tags en una cadena y los devuelve como coleccion
-    /*$('#div-form-group-imagen').submit(
-        function tagParser(e){    
-        var input = document.getElementById('id_tag');
-        var value = input.value;
-        var tags = value.split(', ');
-        sendTagsInPost(tags, value.length);
-    });
-
-    function sendTagsInPost(tags,len){
-        var appendDiv = document.getElementById("data-tags-post"); //.appendChild(input);
-        for (var tag in tags ) {
-            var input = document.createElement("input");
-            $(input).attr('name','tag');          //-'.concat(tag.toString()));
-            $(input).attr('type','hidden');
-            $(input).attr('value', tags[tag].toString());
-
-            console.log(input);
-            appendDiv.appendChild(input);
-        };
-        console.log(appendDiv);
-        console.log(appendDiv);
-        console.log(appendDiv);
-    }*/
-
-
+    $('#hint_id_etiquetas').remove();
 
     </script>
     

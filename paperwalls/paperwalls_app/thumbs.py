@@ -1,7 +1,16 @@
 # -*- encoding: utf-8 -*-
 """
-django-thumbs by Antonio Melé
-http://django.es
+django-thumbs by Antonio Melé (http://django.es)
+See http://code.google.com/p/django-thumbs/
+
+original version: 4
+original latest commit: Jun 08, 2009
+
+edited by iorlas (http://blog.soulrobber.ru/)
+See https://github.com/iorlas/django-thumb2
+
+version 0.9
+
 """
 from django.db.models import ImageField
 from django.db.models.fields.files import ImageFieldFile
@@ -47,10 +56,38 @@ def generate_thumb(img, thumb_size, format):
         image2.load()
         # thumbnail of the cropped image (with ANTIALIAS to make it look better)
         image2.thumbnail(thumb_size, Image.ANTIALIAS)
+    
+    #so, we need to rewrite this fun totally, but now, til i use only not quad sizes, it's ok too
     else:
-        # not quad
-        image2 = image
-        image2.thumbnail(thumb_size, Image.ANTIALIAS)
+        ## not quad
+        #image2 = image
+        #image2.thumbnail(thumb_size, Image.ANTIALIAS)
+        #so, i need to resize and crop by minimal dimension
+        xsize, ysize = image.size
+
+        #we need to know, which side is lower for teh minimal thumb size w/o cropping
+        sized_by_x = xsize < ysize #True - x, False - y
+
+        #aspect factors
+        aspect_x = xsize/float(ysize) #we need to keep aspect, huh?
+        aspect_y = ysize/float(xsize)
+
+        #ok, now we can get a thumb minimal size and cropping offsets
+        if sized_by_x:
+            new_size = (thumb_w, int(float(thumb_h)*aspect_y))
+            crop_offset = (0, int((new_size[1]-thumb_h)/2.0))
+        else:
+            new_size = (int(float(thumb_w)*aspect_x), thumb_h)
+            crop_offset = (int((new_size[0]-thumb_w)/2.0), 0)
+
+        #ok, get a minimal thumb
+        image.thumbnail(new_size, Image.ANTIALIAS)
+
+        #thats why i hate PIL - there is no meaning whats must be done and how it must be done
+        #some funcs, like this, can just return image, w/o modifing itself. Use teh docs.
+        #also, dont firget that crop uses points as last 2 parameters,
+        # not a width and height, just a POINTS in this image, so, we need to append offsets to it for goodness
+        image2 = image.crop((crop_offset[0], crop_offset[1], thumb_w+crop_offset[0], thumb_h+crop_offset[1]))
     
     io = cStringIO.StringIO()
     # PNG and GIF are the same, JPG is JPEG
@@ -97,7 +134,7 @@ class ImageWithThumbsFieldFile(ImageFieldFile):
                 if not thumb_name == thumb_name_:
                     raise ValueError('There is already a file named %s' % thumb_name)
         
-    def delete(self, save=True):
+    def delete(self, save=False): #Save=False -> puede borrar fisicamente los thumbnails creados
         name=self.name
         super(ImageWithThumbsFieldFile, self).delete(save)
         if self.field.sizes:

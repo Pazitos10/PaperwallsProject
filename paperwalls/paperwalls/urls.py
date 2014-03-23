@@ -49,12 +49,15 @@ urlpatterns = patterns('',
     url(r'^paperwalls$', 'paperwalls_app.views.home', name='home'),
     url(r'^paperwalls/logout$', 'paperwalls_app.views.salir', name='salir'),
 
+
    
     # Uncomment the admin/doc line below to enable admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
+    
+    (r'^selectable/', include('selectable.urls')),
 )
 
 

@@ -2,9 +2,17 @@
 
     
 {% block welcome %}
+    <script>
+        var user_logged_in = false;
+    </script>
     {% if not user.is_authenticated %}
         {{block.super}}
+    {% else %} 
+        <script>
+            user_logged_in = true;
+        </script>
     {% endif %}
+
 {% endblock welcome %}
 
 
@@ -16,8 +24,10 @@
             {% for album in albums.object_list %}
                 {% if album.imagen_set.count > 0 %}
                     {% for img in album.imagen_set.all %}
-                    <a href="{% url "view_image" img.id %}"><img id="img-style" class="img-thumbnail" border="0" alt=""
-                            src="{{img.imagen.url_128x128 }}" /></a>
+                        {% if img.publica == True %}
+                            <a href="{% url "view_image" img.id %}"><img id="img-style" class="img-thumbnail" border="0" alt=""
+                                src="{{img.imagen.url_128x128 }}" /></a>
+                        {% endif %}        
                     {% endfor %}
                 {% endif %}
             {% endfor %}
@@ -25,3 +35,12 @@
     </div>
 
 {% endblock %}
+
+{% block scripts %}
+    {{block.super}}
+    <script>
+        if( user_logged_in ) {
+            $("#album-list").attr('style','margin-top:80px;');
+        }
+    </script>
+{% endblock%}

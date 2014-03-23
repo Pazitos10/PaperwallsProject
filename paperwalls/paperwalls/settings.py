@@ -136,7 +136,8 @@ INSTALLED_APPS = (
     'paperwalls_app',
     'crispy_forms',
     'pagination',
-    'autocomplete_light',
+    'selectable',
+    'taggit',
 )
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'

@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
+{% load selectable_tags %}
 
 
 {% block welcome %}
@@ -13,7 +14,15 @@
             </div>  
             <div class="panel-body">
                 {% crispy buscar %}
-                {% crispy album %}
+                <hr>
+                <h5 style="text-align: center"><strong>Datos a modificar: </strong></h5><br>
+                {% if album %}
+                    {% if album.instance.creador == user %}
+                        {% crispy album %}
+                    {% else %}
+                        <p>El album que intentas modificar no te pertenece, intenta con uno propio</p>
+                    {% endif %}
+                {% endif %}            
             </div>
         </div>
     </div>
@@ -23,10 +32,13 @@
 {% block scripts %}
     {{ block.super }}
     <script type="text/javascript">
-        $(document).ready(function() {
-            $(':input[name=album_0]').bind('djselectableselect', function(event, ui) {
-                $(this).parents("form").submit();
-            });
+    $(document).ready(function() {
+        $(':input[name=album_0]').bind('djselectableselect', function(event, ui) {
+            $(this).parents("form").submit();
         });
+    });
+
+    var submitbtn = document.getElementById('submit-id-submit-album');
+    $(submitbtn).attr('value','Modificar');
     </script>
 {% endblock scripts %}
