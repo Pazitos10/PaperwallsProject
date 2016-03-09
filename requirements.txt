@@ -1,5 +1,4 @@
 Django==1.5.4
-PIL==1.1.7
 Pillow==2.2.2
 argparse==1.2.1
 django-crispy-forms==1.4.0
@@ -10,7 +9,6 @@ django-selectable==0.8.0
 django-taggit==0.11.2
 ipdb==0.8
 ipython==0.13.2
-psycopg2==2.4.5
 python-dateutil==2.2
 six==1.6.1
 sqlparse==0.1.10

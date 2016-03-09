@@ -1,2 +1,3 @@
-*.pyc
-media/images/*
+paperwalls/paperwalls/*.pyc
+paperwalls/paperwalls_app/*.pyc
+paperwalls/media/images/*
