@@ -1,3 +1,3 @@
-*.pyc
+#*.pyc
 paperwalls/media/images/*
 paperwalls/paperwallsdb
